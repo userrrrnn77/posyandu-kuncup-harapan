@@ -94,7 +94,7 @@ const UserList = () => {
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 shrink-0">
                   <User size={16} />
                 </div>
-                <p className="font-bold text-slate-800 text-sm md:text-base">
+                <p className="font-bold text-slate-800 text-sm md:text-black">
                   {user.fullname}
                 </p>
               </div>

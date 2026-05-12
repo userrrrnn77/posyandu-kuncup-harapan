@@ -142,7 +142,7 @@ const BalitaList = () => {
             key={balita._id}
             className="hover:bg-slate-50/50 transition-colors group">
             <td className="px-4 md:px-6 py-4 whitespace-nowrap">
-              <p className="font-bold text-slate-800 text-sm md:text-base">
+              <p className="font-bold text-slate-800 text-sm md:text-black">
                 {balita.namaBalita}
               </p>
               <span
