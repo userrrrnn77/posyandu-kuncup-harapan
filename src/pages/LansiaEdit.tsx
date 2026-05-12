@@ -42,14 +42,12 @@ const LansiaEdit = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { updateLansia, isSubmitting } = useLansiaActions();
-
   const { lansias, isFetching } = usePosyanduStore();
   const currentLansia = lansias.find((l) => l._id === id);
 
   const form = useForm<LansiaFormInput, unknown, LansiaFormData>({
     resolver: zodResolver(lansiaSchema),
   });
-
   const {
     register,
     handleSubmit,
@@ -97,42 +95,44 @@ const LansiaEdit = () => {
   if (isFetching && !currentLansia) {
     return (
       <div className="h-96 flex flex-col items-center justify-center text-slate-400 gap-3 italic font-bold">
-        <Loader2 className="animate-spin text-primary" size={40} />
-        Syncing Lansia Data...
+        <Loader2 className="animate-spin text-primary" size={40} /> Syncing
+        Lansia Data...
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between">
+    <div className="max-w-4xl mx-auto space-y-4 md:space-y-6 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-4">
         <button
           onClick={() => navigate("/lansia")}
-          className="flex items-center gap-2 text-slate-500 hover:text-primary font-bold transition-all">
+          className="flex items-center gap-2 text-slate-500 hover:text-primary font-bold text-sm transition-all">
           <ChevronLeft size={20} /> Kembali
         </button>
-        <div className="text-right">
-          <h1 className="text-2xl font-black text-slate-800 uppercase tracking-tight">
+        <div className="xs:text-right">
+          <h1 className="text-xl md:text-2xl font-black text-slate-800 uppercase tracking-tight">
             Update Medis
           </h1>
-          <p className="text-[10px] text-rose-500 font-black tracking-widest uppercase italic">
+          <p className="text-[10px] text-rose-500 font-black tracking-widest uppercase italic truncate max-w-50 xs:max-w-none">
             Lansia: {currentLansia?.namaLengkapLansia}
           </p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-6 md:space-y-8">
         {/* IDENTITAS TERKUNCI */}
-        <div className="card-titanium bg-slate-50/50 border-slate-200 opacity-80">
+        <div className="card-titanium bg-slate-50/50 border-slate-200 opacity-80 p-4 md:p-8">
           <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
             <div className="flex items-center gap-2 text-slate-500">
-              <Lock size={18} />
-              <h2 className="font-bold uppercase text-xs">
+              <Lock size={16} />
+              <h2 className="font-bold uppercase text-[10px] md:text-xs tracking-wider">
                 Identitas Permanen
               </h2>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <Input
               label="Nama Lengkap"
               {...register("namaLengkapLansia")}
@@ -149,14 +149,14 @@ const LansiaEdit = () => {
         </div>
 
         {/* DATA EDITABLE */}
-        <div className="card-titanium space-y-6 border-t-4 border-t-rose-500">
+        <div className="card-titanium space-y-6 border-t-4 border-t-rose-500 p-4 md:p-8">
           <div className="flex items-center gap-2 border-b border-slate-50 pb-4 text-rose-500">
-            <HeartPulse size={24} />
-            <h2 className="font-bold uppercase text-sm tracking-widest text-slate-800">
+            <HeartPulse size={20} />
+            <h2 className="font-bold uppercase text-xs md:text-sm tracking-widest text-slate-800">
               Update Kondisi & Domisili
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <Input
               label="Alamat Domisili"
               {...register("alamatLengkapDomisili")}
@@ -177,11 +177,11 @@ const LansiaEdit = () => {
         </div>
 
         {/* MEDIS SECTION */}
-        <div className="card-titanium bg-slate-900 text-white space-y-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-5 text-white pointer-events-none">
+        <div className="card-titanium bg-slate-900 text-white space-y-6 md:space-y-8 relative overflow-hidden p-4 md:p-8">
+          <div className="absolute top-0 right-0 p-8 opacity-5 text-white pointer-events-none hidden md:block">
             <Activity size={120} />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 relative z-10">
             <Input
               label="TD (mmHg)"
               placeholder="120/80"
@@ -230,29 +230,28 @@ const LansiaEdit = () => {
           </div>
         </div>
 
-        <div className="card-titanium space-y-2">
-          <label className="text-xs font-black text-slate-400 uppercase ml-1">
+        <div className="card-titanium space-y-2 p-4 md:p-8">
+          <label className="text-[10px] md:text-xs font-black text-slate-400 uppercase ml-1">
             Catatan Medis Terbaru
           </label>
           <textarea
             {...register("catatanKesehatanTambahan")}
-            className="input-posyandu min-h-25 pt-3 bg-slate-50"
+            className="input-posyandu min-h-24 pt-3 bg-slate-50 text-sm"
           />
         </div>
 
-        {/* ACTION BUTTONS */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-3">
           <button
             type="button"
             onClick={() => navigate("/lansia")}
-            className="flex-1 px-6 py-4 border border-slate-200 text-slate-500 font-bold rounded-2xl hover:bg-slate-50">
+            className="w-full sm:flex-1 px-6 py-4 border border-slate-200 text-slate-500 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm">
             Batalkan
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-2 bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl shadow-xl shadow-rose-100 flex items-center justify-center gap-2 disabled:opacity-50 transition-all">
-            <Save size={20} />{" "}
+            className="w-full sm:flex-2 bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl shadow-xl shadow-rose-100 flex items-center justify-center gap-2 disabled:opacity-50 transition-all text-sm">
+            <Save size={18} />{" "}
             {isSubmitting ? "Syncing..." : "Update Data Medis"}
           </button>
         </div>

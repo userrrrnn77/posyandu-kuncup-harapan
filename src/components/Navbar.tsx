@@ -1,13 +1,23 @@
-import { Bell, UserCircle } from "lucide-react";
+import { Bell, UserCircle, Menu } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 import { cn } from "../lib/cn";
 
-export const Navbar = () => {
-  // Ambil data user dari store vibranium lu
+interface NavbarProps {
+  onMenuClick: () => void; // Buat trigger buka sidebar
+}
+
+export const Navbar = ({ onMenuClick }: NavbarProps) => {
   const user = useAuthStore((state) => state.user);
 
   return (
     <nav className="h-16 border-b border-slate-100 bg-white/80 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
+      {/* 1. MOBILE HAMBURGER - Muncul cuma di mobile */}
+      <button
+        onClick={onMenuClick}
+        className="p-2 -ml-2 text-slate-600 hover:bg-slate-50 rounded-xl md:hidden transition-colors">
+        <Menu size={24} />
+      </button>
+
       {/* 2. ACTIONS & PROFILE */}
       <div className="flex items-center gap-4 ml-auto">
         <button className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors relative">
@@ -15,7 +25,7 @@ export const Navbar = () => {
           <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
         </button>
 
-        <div className="h-8 w-px bg-slate-100 mx-2"></div>
+        <div className="h-8 w-px bg-slate-100 mx-2 hidden xs:block"></div>
 
         {/* Info User */}
         <div className="flex items-center gap-3">

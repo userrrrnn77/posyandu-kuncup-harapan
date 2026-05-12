@@ -21,16 +21,20 @@ const LansiaList = () => {
   const [selectedLansia, setSelectedLansia] = useState<ILansia | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 🔍 Filter Search by Name
-  const filteredData = lansias.filter(
-    (l) =>
-      l.namaLengkapLansia
-        .toLowerCase()
-        .includes(debouncedSearch.toLowerCase()) ||
-      l.nomorIndukKependudukan?.includes(debouncedSearch),
-  );
+  const filteredData = [...lansias]
+    .sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA;
+    })
+    .filter(
+      (l) =>
+        l.namaLengkapLansia
+          .toLowerCase()
+          .includes(debouncedSearch.toLowerCase()) ||
+        l.nomorIndukKependudukan?.includes(debouncedSearch),
+    );
 
-  // 📊 Export Excel
   const exportToExcel = () => {
     const dataToExport = filteredData.map((l) => ({
       "Nama Lansia": l.namaLengkapLansia,
@@ -56,10 +60,8 @@ const LansiaList = () => {
 
   const handleDeleteConfirm = async () => {
     if (!deleteId) return;
-
     setIsDeleting(true);
     const success = await removeLansia(deleteId);
-
     if (success) {
       fetchLansias();
       setDeleteId(null);
@@ -68,40 +70,39 @@ const LansiaList = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-4 md:space-y-6 animate-in fade-in duration-500 pb-10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight uppercase">
             DATA LANSIA
           </h1>
-          <p className="text-sm text-slate-500 font-medium italic">
+          <p className="text-xs md:text-sm text-slate-500 font-medium italic">
             Pemantauan Kesehatan Warga Senior
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2">
           <button
             onClick={exportToExcel}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all shadow-sm">
-            <Download size={18} />
-            Export Excel
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all shadow-sm text-sm">
+            <Download size={18} /> Export
           </button>
           <Link
             to="/lansia/add"
-            className="btn-josjis flex items-center gap-2 shadow-lg shadow-emerald-100">
+            className="btn-josjis flex items-center justify-center gap-2 shadow-lg shadow-emerald-100 py-2.5 text-sm">
             <Plus size={20} /> Tambah Data
           </Link>
         </div>
       </div>
 
-      <div className="relative max-w-md">
+      <div className="relative w-full md:max-w-md">
         <Search
           className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-          size={20}
+          size={18}
         />
         <input
           type="text"
-          placeholder="Cari nama atau NIK lansia..."
-          className="input-posyandu pl-12 h-12 shadow-sm"
+          placeholder="Cari nama atau NIK..."
+          className="input-posyandu pl-11 h-11 md:h-12 shadow-sm text-sm"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -115,27 +116,27 @@ const LansiaList = () => {
           <tr
             key={lansia._id}
             className="hover:bg-slate-50/50 transition-colors">
-            <td className="px-6 py-4 whitespace-nowrap">
-              <p className="font-bold text-slate-800">
+            <td className="px-4 md:px-6 py-4 whitespace-nowrap">
+              <p className="font-bold text-slate-800 text-sm md:text-base">
                 {lansia.namaLengkapLansia}
               </p>
-              <p className="text-[10px] text-slate-400 font-bold uppercase">
+              <p className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase">
                 RT {lansia.rukunTetangga}
               </p>
             </td>
-            <td className="px-6 py-4 whitespace-nowrap font-mono text-sm text-slate-500">
+            <td className="px-4 md:px-6 py-4 whitespace-nowrap font-mono text-xs md:text-sm text-slate-500">
               {lansia.nomorIndukKependudukan}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap font-bold text-primary">
+            <td className="px-4 md:px-6 py-4 whitespace-nowrap font-bold text-primary text-sm md:text-base">
               {lansia.tekananDarahSistolikDiastolik}{" "}
-              <span className="text-[10px] font-normal text-slate-400">
+              <span className="text-[9px] md:text-[10px] font-normal text-slate-400">
                 mmHg
               </span>
             </td>
-            <td className="px-6 py-4 whitespace-nowrap">
+            <td className="px-4 md:px-6 py-4 whitespace-nowrap">
               <span
                 className={cn(
-                  "px-2 py-1 rounded-md text-xs font-bold",
+                  "px-2 py-1 rounded-md text-[10px] md:text-xs font-bold",
                   lansia.kadarGulaDarahSewaktuMgdl > 200
                     ? "bg-rose-100 text-rose-600"
                     : "bg-emerald-100 text-emerald-600",
@@ -143,7 +144,7 @@ const LansiaList = () => {
                 {lansia.kadarGulaDarahSewaktuMgdl} mg/dL
               </span>
             </td>
-            <td className="px-6 py-4 whitespace-nowrap">
+            <td className="px-4 md:px-6 py-4 whitespace-nowrap">
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => {
@@ -159,7 +160,7 @@ const LansiaList = () => {
                   <Edit2 size={18} />
                 </Link>
                 <button
-                  onClick={() => setDeleteId(lansia._id!)} // Set ID yang mau dihapus
+                  onClick={() => setDeleteId(lansia._id!)}
                   className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all">
                   <Trash2 size={18} />
                 </button>
@@ -174,32 +175,33 @@ const LansiaList = () => {
         onClose={() => setIsModalOpen(false)}
         title="Detail Kesehatan Lansia">
         {selectedLansia && (
-          <div className="space-y-6">
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+          <div className="space-y-4 md:space-y-6">
+            <div className="p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+              <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 Identitas
               </p>
-              <p className="font-bold text-primary-dark">
+              <p className="font-bold text-primary-dark text-sm md:text-base">
                 <span className="text-gray-400">Nama</span>{" "}
                 {selectedLansia.namaLengkapLansia}
               </p>
-              <p className="text-sm text-slate-500 font-medium">
+              <p className="text-xs md:text-sm text-slate-500 font-medium font-mono">
                 NIK {selectedLansia.nomorIndukKependudukan}
               </p>
             </div>
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+
+            <div className="p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+              <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 Domisili
               </p>
-              <p className="font-bold text-slate-800">
+              <p className="font-bold text-slate-800 text-sm md:text-base">
                 {selectedLansia.alamatLengkapDomisili}
               </p>
-              <p className="text-sm text-slate-500 font-medium">
+              <p className="text-xs md:text-sm text-slate-500 font-medium italic">
                 RT {selectedLansia.rukunTetangga}
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               <HealthCard
                 label="Asam Urat"
                 value={selectedLansia.kadarAsamUratDarahMgdl}
@@ -223,10 +225,10 @@ const LansiaList = () => {
             </div>
 
             <div className="pt-2">
-              <p className="text-[10px] font-black text-slate-400 uppercase mb-2">
+              <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase mb-2 ml-1">
                 Catatan Tambahan
               </p>
-              <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl text-sm text-amber-800 italic">
+              <div className="p-3 md:p-4 bg-amber-50 border border-amber-100 rounded-xl text-xs md:text-sm text-amber-800 italic">
                 "
                 {selectedLansia.catatanKesehatanTambahan ||
                   "Tidak ada catatan."}
@@ -236,6 +238,7 @@ const LansiaList = () => {
           </div>
         )}
       </Modal>
+
       <ConfirmModal
         isOpen={!!deleteId}
         isLoading={isDeleting}
@@ -246,7 +249,6 @@ const LansiaList = () => {
   );
 };
 
-// Sub-component buat kartu kesehatan di modal
 const HealthCard = ({
   label,
   value,
@@ -256,10 +258,15 @@ const HealthCard = ({
   value: number;
   unit: string;
 }) => (
-  <div className="p-3 border border-slate-100 rounded-xl">
-    <p className="text-[10px] text-slate-400 font-bold uppercase">{label}</p>
-    <p className="text-lg font-black text-slate-800">
-      {value} <span className="text-xs font-normal text-slate-400">{unit}</span>
+  <div className="p-3 border border-slate-100 rounded-xl bg-white shadow-sm">
+    <p className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-tight">
+      {label}
+    </p>
+    <p className=" md:text-lg font-black text-slate-800">
+      {value}{" "}
+      <span className="text-[10px] md:text-xs font-normal text-slate-400">
+        {unit}
+      </span>
     </p>
   </div>
 );

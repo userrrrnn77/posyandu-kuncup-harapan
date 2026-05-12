@@ -84,7 +84,6 @@ const BalitaEdit = () => {
 
   const onSubmit = async (data: BalitaFormData) => {
     if (!id) return;
-    // Identitas statis tetep dikirim atau di-filter sesuai kebutuhan API lu
     const success = await updateBalita(id, data as unknown as Partial<IBalita>);
     if (success) navigate("/balita");
   };
@@ -99,15 +98,15 @@ const BalitaEdit = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between">
+    <div className="max-w-4xl mx-auto space-y-4 md:space-y-6 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-4">
         <button
           onClick={() => navigate("/balita")}
-          className="flex items-center gap-2 text-slate-500 hover:text-primary font-bold">
+          className="flex items-center gap-2 text-slate-500 hover:text-primary font-bold text-sm">
           <ChevronLeft size={20} /> Kembali
         </button>
-        <div className="text-right">
-          <h1 className="text-2xl font-black text-slate-800 uppercase tracking-tight">
+        <div className="xs:text-right">
+          <h1 className="text-xl md:text-2xl font-black text-slate-800 uppercase tracking-tight">
             Update Data
           </h1>
           <p className="text-[10px] text-amber-500 font-black tracking-widest uppercase italic">
@@ -116,22 +115,23 @@ const BalitaEdit = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* IDENTITAS SECTION (READ-ONLY) */}
-        <div className="card-titanium space-y-6 bg-slate-50/50 border-slate-200">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-6 md:space-y-8">
+        {/* IDENTITAS */}
+        <div className="card-titanium space-y-6 bg-slate-50/50 border-slate-200 p-4 md:p-8">
           <div className="flex items-center justify-between border-b border-slate-200 pb-4">
             <div className="flex items-center gap-2">
-              <Baby className="text-slate-400" size={24} />
-              <h2 className="font-bold text-slate-500 uppercase text-sm">
+              <Baby className="text-slate-400" size={20} />
+              <h2 className="font-bold text-slate-500 uppercase text-xs md:text-sm">
                 Identitas Primer
               </h2>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-200 rounded-full text-[10px] font-black text-slate-600 uppercase">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-200 rounded-full text-[9px] md:text-[10px] font-black text-slate-600 uppercase">
               <Lock size={12} /> Terkunci
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-80">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 opacity-80">
             <Input
               label="Nama Lengkap Balita"
               {...register("namaBalita")}
@@ -139,7 +139,7 @@ const BalitaEdit = () => {
               className="bg-slate-100 cursor-not-allowed border-slate-200 font-bold"
             />
             <Input
-              label="NIK (Nomor Induk Kependudukan)"
+              label="NIK"
               {...register("nomorIndukKependudukan")}
               readOnly
               className="bg-slate-100 cursor-not-allowed border-slate-200 font-mono"
@@ -147,15 +147,15 @@ const BalitaEdit = () => {
           </div>
         </div>
 
-        {/* EDITABLE SECTION */}
-        <div className="card-titanium space-y-6 border-t-4 border-t-amber-500">
+        {/* INFO WALI */}
+        <div className="card-titanium space-y-6 border-t-4 border-t-amber-500 p-4 md:p-8">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
             <Activity className="text-amber-500" size={20} />
-            <h2 className="font-bold text-slate-800 uppercase text-sm">
+            <h2 className="font-bold text-slate-800 uppercase text-xs md:text-sm">
               Informasi Wali & Domisili
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <Input
               label="Nama Ibu / Wali"
               {...register("namaOrangTua")}
@@ -184,7 +184,7 @@ const BalitaEdit = () => {
               {...register("anakKe")}
               error={errors.anakKe?.message}
             />
-            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
               <div className="md:col-span-2">
                 <Input
                   label="Alamat Lengkap"
@@ -201,20 +201,20 @@ const BalitaEdit = () => {
           </div>
         </div>
 
-        {/* ANTROPOMETRI SECTION */}
-        <div className="card-titanium bg-slate-900 text-white space-y-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none text-white">
+        {/* ANTROPOMETRI */}
+        <div className="card-titanium bg-slate-900 text-white space-y-6 md:space-y-8 relative overflow-hidden p-4 md:p-8">
+          <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none text-white hidden md:block">
             <Ruler size={120} />
           </div>
           <div className="flex items-center gap-2 border-b border-white/10 pb-4">
             <div className="p-2 bg-white/10 text-amber-400 rounded-lg">
-              <Activity size={20} />
+              <Activity size={18} />
             </div>
-            <h2 className="font-bold uppercase text-sm tracking-widest text-white">
+            <h2 className="font-bold uppercase text-xs md:text-sm tracking-widest text-white">
               Update Hasil Pengukuran
             </h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 relative z-10">
             <Input
               label="BB (kg)"
               type="number"
@@ -250,30 +250,30 @@ const BalitaEdit = () => {
           </div>
         </div>
 
-        <div className="card-titanium space-y-2">
-          <label className="text-xs font-black text-slate-400 uppercase ml-1">
+        <div className="card-titanium space-y-2 p-4 md:p-8">
+          <label className="text-[10px] md:text-xs font-black text-slate-400 uppercase ml-1">
             Catatan Medis Terbaru
           </label>
           <textarea
             {...register("keterangan")}
-            className="input-posyandu min-h-25 pt-3 bg-slate-50"
+            className="input-posyandu min-h-24 pt-3 bg-slate-50 text-sm"
           />
         </div>
 
         {/* ACTIONS */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-3">
           <button
             type="button"
             onClick={() => navigate("/balita")}
-            className="flex-1 px-6 py-4 border border-slate-200 text-slate-500 font-bold rounded-2xl hover:bg-slate-50 transition-all">
+            className="w-full sm:flex-1 px-6 py-4 border border-slate-200 text-slate-500 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm">
             Batalkan
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-2 bg-amber-500 hover:bg-amber-600 text-white font-black py-4 rounded-2xl shadow-xl shadow-amber-100 flex items-center justify-center gap-2 transition-all disabled:opacity-50">
-            <Save size={20} />{" "}
-            {isSubmitting ? "Syncing..." : "Simpan Perubahan Data"}
+            className="w-full sm:flex-2 bg-amber-500 hover:bg-amber-600 text-white font-black py-4 rounded-2xl shadow-xl shadow-amber-100 flex items-center justify-center gap-2 transition-all disabled:opacity-50 text-sm">
+            <Save size={18} />{" "}
+            {isSubmitting ? "Syncing..." : "Simpan Perubahan"}
           </button>
         </div>
       </form>
