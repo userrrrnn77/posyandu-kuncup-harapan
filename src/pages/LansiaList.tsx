@@ -47,6 +47,23 @@ const LansiaList = () => {
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+
+    // 🔥 Jurus Auto-Fit Vibranium
+    const headers = Object.keys(dataToExport[0]);
+    const wscols = headers.map((header) => {
+      let maxLen = header.length;
+      dataToExport.forEach((row) => {
+        const cellValue = row[header as keyof typeof row]?.toString() || "";
+        if (cellValue.length > maxLen) {
+          maxLen = cellValue.length;
+        }
+      });
+      return { wch: maxLen + 3 };
+    });
+
+    worksheet["!cols"] = wscols;
+    console.log(worksheet["!cols"]);
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Data Lansia");
     XLSX.writeFile(

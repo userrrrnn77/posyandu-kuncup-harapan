@@ -46,9 +46,29 @@ const BalitaList = () => {
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+
+    // 🔥 Jurus Auto-Fit Vibranium
+    const headers = Object.keys(dataToExport[0]);
+    const wscols = headers.map((header) => {
+      // 1. Cek panjang header
+      let maxLen = header.length;
+
+      // 2. Loop semua data di kolom ini buat cari yang terpanjang
+      dataToExport.forEach((row) => {
+        const cellValue = row[header as keyof typeof row]?.toString() || "";
+        if (cellValue.length > maxLen) {
+          maxLen = cellValue.length;
+        }
+      });
+
+      // 3. Balikin lebar kolom (ditambah 3 buat padding biar gak mepet)
+      return { wch: maxLen + 3 };
+    });
+
+    worksheet["!cols"] = wscols;
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Data Balita");
-
     XLSX.writeFile(
       workbook,
       `Data_Balita_Posyandu_${new Date().toLocaleDateString()}.xlsx`,
