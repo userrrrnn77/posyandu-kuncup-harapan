@@ -6,6 +6,8 @@ interface NavbarProps {
   onMenuClick: () => void; // Buat trigger buka sidebar
 }
 
+// testing git
+
 export const Navbar = ({ onMenuClick }: NavbarProps) => {
   const user = useAuthStore((state) => state.user);
 
