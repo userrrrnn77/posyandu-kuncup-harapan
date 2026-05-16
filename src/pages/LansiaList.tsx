@@ -37,13 +37,18 @@ const LansiaList = () => {
 
   const exportToExcel = () => {
     const dataToExport = filteredData.map((l) => ({
-      "Nama Lansia": l.namaLengkapLansia,
-      NIK: l.nomorIndukKependudukan,
-      RT: l.rukunTetangga,
-      "TD (mmHg)": l.tekananDarahSistolikDiastolik,
-      "GDS (mg/dL)": l.kadarGulaDarahSewaktuMgdl,
-      "AU (mg/dL)": l.kadarAsamUratDarahMgdl,
-      Kolesterol: l.kadarKolesterolTotalMgdl,
+      "Nama Lansia": l.namaLengkapLansia || "-",
+      NIK: l.nomorIndukKependudukan || "-",
+      Alamat: l.alamatLengkapDomisili || "-",
+      RT: l.rukunTetangga || "-",
+      "Tanggal Lahir": l.tanggalLahirLansia || "-",
+      "BB(KG)": l.beratBadanKilogram || "-",
+      "TB(CM)": l.tinggiBadanSentimeter || "-",
+      "TD (mmHg)": l.tekananDarahSistolikDiastolik || "-",
+      "GDS (mg/dL)": l.kadarGulaDarahSewaktuMgdl || "-",
+      "AU (mg/dL)": l.kadarAsamUratDarahMgdl || "-",
+      Kolesterol: l.kadarKolesterolTotalMgdl || "-",
+      Keterangan: l.catatanKesehatanTambahan || "-",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);

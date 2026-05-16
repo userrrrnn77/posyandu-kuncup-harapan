@@ -51,7 +51,6 @@ const Login = () => {
               placeholder="••••••••"
               {...register("password")}
               error={errors.password?.message}
-              // harusnya ini ada if(type === password ? password : text njir)
             />
 
             <button

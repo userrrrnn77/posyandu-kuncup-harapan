@@ -24,6 +24,14 @@ class AuthService {
     const { data } = await api.get("/auth/users");
     return data;
   }
+
+  async updateUser(
+    id: string,
+    payload: Partial<IUser>,
+  ): Promise<ApiResponse<IUser>> {
+    const { data } = await api.patch(`/auth/users/${id}`, payload);
+    return data;
+  }
 }
 
 class PosyanduService {

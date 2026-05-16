@@ -34,16 +34,37 @@ const BalitaList = () => {
     );
 
   const exportToExcel = () => {
-    const dataToExport = filteredData.map((b) => ({
-      "Nama Balita": b.namaBalita,
-      "Nama Orang Tua": b.namaOrangTua,
-      NIK: b.nomorIndukKependudukan || "-",
-      "Jenis Kelamin": b.jenisKelamin,
-      RT: b.rukunTetangga,
-      "BB (kg)": b.antropometri.beratBadan,
-      "TB (cm)": b.antropometri.tinggiBadan,
-      Keterangan: b.keterangan || "-",
-    }));
+    const dataToExport = filteredData.map((b) => {
+      const now = new Date();
+      const born = new Date(b.tanggalLahir);
+
+      let totalMonths = (now.getFullYear() - born.getFullYear()) * 12;
+      totalMonths += now.getMonth() - born.getMonth();
+
+      if (now.getDate() < born.getDate()) {
+        totalMonths--;
+      }
+
+      const umurBulan = totalMonths < 0 ? 0 : totalMonths;
+
+      return {
+        NIK: b.nomorIndukKependudukan || "-",
+        "Nama Balita": b.namaBalita || "-",
+        "Nama Orang Tua": b.namaOrangTua || "-",
+        "Anak Ke": b.anakKe || "-",
+        "Jenis Kelamin": b.jenisKelamin || "-",
+        Alamat: b.rukunTetangga || "-",
+        "Tanggal Lahir": b.tanggalLahir
+          ? new Date(b.tanggalLahir).toLocaleDateString("id-ID")
+          : "-",
+        "Umur(Bln)": umurBulan || "-",
+        "BB (kg)": b.antropometri.beratBadan || "-",
+        "TB (cm)": b.antropometri.tinggiBadan || "-",
+        LILA: b.antropometri.lingkarLenganAtas || "-",
+        LIKA: b.antropometri.lingkarKepala || "-",
+        Keterangan: b.keterangan || "-",
+      };
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
 

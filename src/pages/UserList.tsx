@@ -15,6 +15,7 @@ const UserList = () => {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [editForm, setEditForm] = useState({
     fullname: "",
+    phone: "",
     password: "",
   });
   const [refreshKey, setRefreshKey] = useState(0);
@@ -44,20 +45,43 @@ const UserList = () => {
 
   const handleEditClick = (user: IUser) => {
     setSelectedUser(user);
-    setEditForm({ fullname: user.fullname, password: user.password });
+    setEditForm({
+      fullname: user.fullname,
+      phone: user.phone,
+      password: user.password,
+    });
   };
 
   const handleUpdate = async () => {
     if (!selectedUser?._id) return;
+
+    // 📦 Susun payload dinamis
+    const payload: Partial<IUser> = {
+      fullname: editForm.fullname,
+    };
+
+    // Hanya kirim field password ke API kalau beneran diisi di input form
+    if (editForm.password.trim() !== "") {
+      payload.password = editForm.password;
+    }
+
+    // 🔍 INSPECT TRACKER
+    console.log("=== 🛠️ MABES LOG: PATCH USER ACCESS ===");
+    console.log("Target ID :", selectedUser._id);
+    console.log("Payload   :", payload);
+    console.log("=======================================");
+
     setIsSubmitting(true);
     try {
-      // Logic update lu di sini bre
-      toast.success(`Data ${editForm.fullname} Berhasil Diperbarui!`);
+      // 🚀 Tembak langsung ke endpoint .patch(`/auth/users/${id}`) lu bre!
+      await authService.updateUser(selectedUser._id, payload);
+
+      toast.success(`Akses ${editForm.fullname} Berhasil Diperbarui!`);
       setSelectedUser(null);
-      setRefreshKey((k) => k + 1);
+      setRefreshKey((k) => k + 1); // Refresh data tabel biar dapet state terbaru
     } catch (error) {
-      console.log(error);
-      toast.error("Gagal update petugas");
+      console.error("❌ BACKEND PATCH FAIL:", error);
+      toast.error("Gagal memperbarui data akses petugas");
     } finally {
       setIsSubmitting(false);
     }
@@ -131,10 +155,23 @@ const UserList = () => {
 
           <Input
             label="Nama Lengkap"
+            placeholder="Kosongkan jika tidak diganti"
             value={editForm.fullname}
             onChange={(e) =>
               setEditForm({ ...editForm, fullname: e.target.value })
             }
+          />
+
+          <Input
+            label="Nomor HP"
+            placeholder="Kosongkan jika tidak diganti"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={editForm.phone}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, "");
+              setEditForm({ ...editForm, phone: value });
+            }}
           />
 
           <Input
