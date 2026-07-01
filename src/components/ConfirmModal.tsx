@@ -21,7 +21,6 @@ export const ConfirmModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="">
       <div className="flex flex-col items-center text-center p-2 sm:p-4">
-        {/* Icon Peringatan - Ukuran adaptif */}
         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mb-4 sm:mb-6 animate-bounce-short">
           <AlertTriangle size={32} className="sm:size-10" />
         </div>
@@ -33,7 +32,6 @@ export const ConfirmModal = ({
           {message}
         </p>
 
-        {/* Action Buttons - Stack on mobile, side-by-side on desktop */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
           <button
             onClick={onClose}

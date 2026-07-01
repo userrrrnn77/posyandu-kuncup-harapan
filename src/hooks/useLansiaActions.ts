@@ -3,11 +3,22 @@ import { posyanduService } from "../api/layanan";
 import { toast } from "sonner";
 import axios from "axios";
 import type { ILansia } from "../types";
+import { isDemoMode } from "../lib/demoMode";
+
+const blockInDemo = () => {
+  toast.error("Mode Demo", {
+    description: "Aksi ini dinonaktifkan di mode demo, Bre!",
+  });
+};
 
 export const useLansiaActions = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addLansia = async (payload: Omit<ILansia, "_id">) => {
+    if (isDemoMode()) {
+      blockInDemo();
+      return false;
+    }
     setIsSubmitting(true);
     try {
       await posyanduService.createLansia(payload);
@@ -25,6 +36,10 @@ export const useLansiaActions = () => {
   };
 
   const updateLansia = async (id: string, payload: Partial<ILansia>) => {
+    if (isDemoMode()) {
+      blockInDemo();
+      return false;
+    }
     setIsSubmitting(true);
     try {
       await posyanduService.updateLansia(id, payload);
@@ -42,6 +57,10 @@ export const useLansiaActions = () => {
   };
 
   const removeLansia = async (id: string) => {
+    if (isDemoMode()) {
+      blockInDemo();
+      return false;
+    }
     try {
       await posyanduService.deleteLansia(id);
       toast.success("Data Terhapus");

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Baby,
@@ -8,9 +8,11 @@ import {
   PlusCircle,
   ShieldCheck,
   X,
+  DoorOpen,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { cn } from "../lib/cn";
+import { isDemoMode } from "../lib/demoMode";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -36,7 +38,9 @@ const menus = [
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { handleLogout } = useAuth();
+  const demoActive = isDemoMode();
 
   const isActive = (path: string, subPaths?: string[]) => {
     if (pathname === path) return true;
@@ -44,9 +48,17 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     return false;
   };
 
+  const handleExit = () => {
+    if (demoActive) {
+      sessionStorage.removeItem("posyandu-demo-mode");
+      navigate("/login", { replace: true });
+      return;
+    }
+    handleLogout();
+  };
+
   return (
     <>
-      {/* OVERLAY: Buat nutup sidebar pas klik luar di mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-300"
@@ -59,7 +71,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           "fixed md:sticky top-0 left-0 h-screen w-64 bg-white border-r border-slate-100 flex flex-col z-50 shadow-2xl md:shadow-sm transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}>
-        {/* BRAND SECTION & CLOSE BUTTON */}
         <div className="p-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-emerald-200 rotate-3">
@@ -75,7 +86,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </div>
           </div>
 
-          {/* Close button cuma di mobile */}
           <button
             onClick={onClose}
             className="md:hidden p-2 text-slate-400 hover:text-rose-500 transition-colors">
@@ -83,7 +93,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </button>
         </div>
 
-        {/* NAVIGATION */}
         <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
           <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
             Menu Utama
@@ -94,7 +103,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               to={menu.path}
               onClick={() => {
                 if (window.innerWidth < 768) onClose();
-              }} // Tutup sidebar pas navigasi di HP
+              }}
               className={cn(
                 "flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 font-bold group",
                 isActive(menu.path, menu.subPaths)
@@ -103,7 +112,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               )}>
               <div className="flex items-center gap-3">
                 <menu.icon size={20} />
-                <span className="tracking-tight">{menu.name}</span>
               </div>
             </Link>
           ))}
@@ -126,12 +134,17 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </Link>
         </nav>
 
-        {/* LOGOUT */}
         <div className="p-4 bg-slate-50/50">
           <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-4 w-full text-rose-500 hover:bg-rose-500 hover:text-white rounded-2xl transition-all duration-300 font-black text-sm uppercase tracking-widest shadow-sm">
-            <LogOut size={18} /> Logout
+            onClick={handleExit}
+            className={cn(
+              "flex items-center gap-3 px-4 py-4 w-full rounded-2xl transition-all duration-300 font-black text-sm uppercase tracking-widest shadow-sm",
+              demoActive
+                ? "text-amber-600 hover:bg-amber-500 hover:text-white"
+                : "text-rose-500 hover:bg-rose-500 hover:text-white",
+            )}>
+            {demoActive ? <DoorOpen size={18} /> : <LogOut size={18} />}
+            {demoActive ? "Keluar Demo" : "Logout"}
           </button>
         </div>
       </aside>

@@ -1,9 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"; // Cannot find module '@hookform/resolvers/zod' or its corresponding type declarations.
 import * as z from "zod";
+import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Input } from "../components/Input";
-import { LogIn, ShieldCheck } from "lucide-react";
+import { LogIn, ShieldCheck, Eye } from "lucide-react";
+import { isDemoMode } from "../lib/demoMode";
 
 const loginSchema = z.object({
   phone: z.string().min(10, "Nomor HP minimal 10 angka!"),
@@ -21,6 +23,12 @@ const Login = () => {
   } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
   });
+
+  // Demo mode gak butuh login (cuma 1 akun, gaada register) — langsung
+  // lempar ke dashboard, biar link "/login?demo=true" bisa dibagiin langsung.
+  if (isDemoMode()) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-base flex items-center justify-center p-4 font-sans">
@@ -72,6 +80,13 @@ const Login = () => {
             Lupa password? Hubungi Admin Arsitek Titanium.
           </p>
         </div>
+
+        <Link
+          to="/dashboard?demo=true"
+          className="mt-5 flex items-center justify-center gap-2 text-xs font-bold text-slate-400 hover:text-primary transition-colors">
+          <Eye size={14} />
+          Coba Mode Demo
+        </Link>
       </div>
     </div>
   );

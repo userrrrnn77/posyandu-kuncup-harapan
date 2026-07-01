@@ -5,11 +5,22 @@ import { posyanduService } from "../api/layanan";
 import { toast } from "sonner";
 import axios from "axios";
 import type { IBalita } from "../types";
+import { isDemoMode } from "../lib/demoMode";
+
+const blockInDemo = () => {
+  toast.error("Mode Demo", {
+    description: "Aksi ini dinonaktifkan di mode demo, Bre!",
+  });
+};
 
 export const useBalitaActions = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addBalita = async (payload: Omit<IBalita, "_id">) => {
+    if (isDemoMode()) {
+      blockInDemo();
+      return false;
+    }
     setIsSubmitting(true);
     try {
       await posyanduService.createBalita(payload);
@@ -29,6 +40,10 @@ export const useBalitaActions = () => {
   };
 
   const updateBalita = async (id: string, payload: Partial<IBalita>) => {
+    if (isDemoMode()) {
+      blockInDemo();
+      return false;
+    }
     setIsSubmitting(true);
     try {
       await posyanduService.updateBalita(id, payload);
@@ -48,6 +63,10 @@ export const useBalitaActions = () => {
   };
 
   const removeBalita = async (id: string) => {
+    if (isDemoMode()) {
+      blockInDemo();
+      return false;
+    }
     try {
       await posyanduService.deleteBalita(id);
       toast.success("Data Terhapus");

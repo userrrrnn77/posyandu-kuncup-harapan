@@ -3,24 +3,20 @@ import { useAuthStore } from "../store/authStore";
 import { cn } from "../lib/cn";
 
 interface NavbarProps {
-  onMenuClick: () => void; // Buat trigger buka sidebar
+  onMenuClick: () => void;
 }
-
-// testing git
 
 export const Navbar = ({ onMenuClick }: NavbarProps) => {
   const user = useAuthStore((state) => state.user);
 
   return (
     <nav className="h-16 border-b border-slate-100 bg-white/80 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
-      {/* 1. MOBILE HAMBURGER - Muncul cuma di mobile */}
       <button
         onClick={onMenuClick}
         className="p-2 -ml-2 text-slate-600 hover:bg-slate-50 rounded-xl md:hidden transition-colors">
         <Menu size={24} />
       </button>
 
-      {/* 2. ACTIONS & PROFILE */}
       <div className="flex items-center gap-4 ml-auto">
         <button className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors relative">
           <Bell size={20} />
@@ -29,7 +25,6 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
 
         <div className="h-8 w-px bg-slate-100 mx-2 hidden xs:block"></div>
 
-        {/* Info User */}
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-bold text-slate-800 leading-none capitalize">

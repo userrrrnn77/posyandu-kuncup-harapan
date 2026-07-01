@@ -9,13 +9,10 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, className, type, ...props }, ref) => {
-    // State buat toggle fitur intip password
     const [showPassword, setShowPassword] = useState(false);
 
-    // Cek apakah tipenya password biar button matanya nongol
     const isPassword = type === "password";
 
-    // Logic ganti tipe input: kalo lagi diintip jadi 'text', kalo kaga balik 'password'
     const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
     return (
@@ -36,14 +33,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
 
-          {/* Button Matanya di sini Bre */}
           {isPassword && (
             <button
-              type="button" // Wajib type button biar kaga submit form pas di-klik
+              type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-primary transition-all active:scale-90 focus:outline-none"
-              tabIndex={-1} // Biar kaga kena fokus tab pas user lagi ngetik
-            >
+              tabIndex={-1}>
               {showPassword ? (
                 <EyeOff
                   size={18}

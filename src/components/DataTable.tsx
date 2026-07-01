@@ -17,10 +17,8 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   return (
     <div className="w-full overflow-hidden rounded-titanium border border-slate-100 bg-white shadow-sm">
-      {/* Container scrollable dengan scrollbar halus */}
       <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200">
         <table className="w-full text-left border-collapse min-w-150">
-          {/* Table Header */}
           <thead className="bg-slate-50/50 border-b border-slate-100">
             <tr>
               {headers.map((header, idx) => (
@@ -33,7 +31,6 @@ export function DataTable<T>({
             </tr>
           </thead>
 
-          {/* Table Body */}
           <tbody className="divide-y divide-slate-50">
             {isLoading ? (
               [...Array(5)].map((_, i) => (
@@ -60,7 +57,6 @@ export function DataTable<T>({
         </table>
       </div>
 
-      {/* Indikator scroll buat mobile biar user tau tabel bisa digeser */}
       <div className="md:hidden py-2 bg-slate-50/50 text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest border-t border-slate-100">
         ← Geser untuk lihat detail →
       </div>

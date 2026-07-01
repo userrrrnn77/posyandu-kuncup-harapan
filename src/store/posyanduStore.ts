@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import type { ApiResponse, IBalita, ILansia } from "../types";
 import { posyanduService } from "../api/layanan";
+import { isDemoMode } from "../lib/demoMode";
 
 interface PosyanduState {
   balitas: IBalita[];
@@ -18,12 +19,12 @@ export const usePosyanduStore = create<PosyanduState>((set) => ({
   lansias: [],
   isFetching: false,
 
-  // src/store/posyanduStore.ts
-
   fetchBalitas: async () => {
     set({ isFetching: true });
     try {
-      const res = await posyanduService.getBalita();
+      const res = isDemoMode()
+        ? await posyanduService.getBalitaDemo()
+        : await posyanduService.getBalita();
 
       const arrayBalita = Array.isArray(res)
         ? res
@@ -41,7 +42,9 @@ export const usePosyanduStore = create<PosyanduState>((set) => ({
   fetchLansias: async () => {
     set({ isFetching: true });
     try {
-      const res = await posyanduService.getLansia();
+      const res = isDemoMode()
+        ? await posyanduService.getLansiaDemo()
+        : await posyanduService.getLansia();
 
       const arrayLansia = Array.isArray(res)
         ? res
@@ -50,7 +53,7 @@ export const usePosyanduStore = create<PosyanduState>((set) => ({
       set({ lansias: arrayLansia || [] });
     } catch (error) {
       console.error("❌ Gagal total:", error);
-      set({ balitas: [] });
+      set({ lansias: [] });
     } finally {
       set({ isFetching: false });
     }

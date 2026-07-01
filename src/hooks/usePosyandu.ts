@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { usePosyanduStore } from "../store/posyanduStore";
 import { useAuthStore } from "../store/authStore";
+import { isDemoMode } from "../lib/demoMode";
 
 export const usePosyandu = (type?: "balita" | "lansia") => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -8,7 +9,7 @@ export const usePosyandu = (type?: "balita" | "lansia") => {
     usePosyanduStore();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated || isDemoMode()) {
       if (type === "balita") {
         fetchBalitas();
       } else if (type === "lansia") {
@@ -21,14 +22,12 @@ export const usePosyandu = (type?: "balita" | "lansia") => {
   }, [type, isAuthenticated, fetchBalitas, fetchLansias]);
 
   const getTodayKunjungan = () => {
-    const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+    const today = new Date().toISOString().split("T")[0];
 
-    // Filter Balita yang dibuat hari ini
     const balitaToday = balitas.filter(
       (b) => b.createdAt && b.createdAt.toString().split("T")[0] === today,
     ).length;
 
-    // Filter Lansia yang diperiksa hari ini
     const lansiaToday = lansias.filter(
       (l) =>
         l.tanggalPemeriksaan &&
@@ -39,7 +38,7 @@ export const usePosyandu = (type?: "balita" | "lansia") => {
   };
 
   return {
-    balitas: balitas || [], 
+    balitas: balitas || [],
     lansias: lansias || [],
     isFetching,
     fetchBalitas,

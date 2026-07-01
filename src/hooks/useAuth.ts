@@ -1,7 +1,7 @@
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import axios from "axios"; // Import axios buat ngecek tipe error
+import axios from "axios";
 import type { IUser } from "../types";
 
 export const useAuth = () => {
@@ -16,15 +16,12 @@ export const useAuth = () => {
       });
       navigate("/dashboard");
     } catch (error: unknown) {
-      // Pake isAxiosError biar TS tau ini error dari gerbang API kita
       if (axios.isAxiosError(error)) {
         toast.error("Gagal Login", {
           description:
-            error.response?.data?.message || 
-            "Cek sinyal atau password Anda!",
+            error.response?.data?.message || "Cek sinyal atau password Anda!",
         });
       } else {
-        // Handle error selain urusan API (misal error logic)
         toast.error("Ada Masalah Internal", {
           description: "Waduh, ada error ghoib di luar urusan API nih!",
         });

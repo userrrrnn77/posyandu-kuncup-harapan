@@ -35,6 +35,17 @@ class AuthService {
 }
 
 class PosyanduService {
+  // --- DEMO (publik, read-only, data di-mask dari backend) ---
+  async getBalitaDemo(): Promise<ApiResponse<IBalita[]>> {
+    const { data } = await api.get("/posyandu/demo/balita");
+    return data;
+  }
+
+  async getLansiaDemo(): Promise<ApiResponse<ILansia[]>> {
+    const { data } = await api.get("/posyandu/demo/lansia");
+    return data;
+  }
+
   // --- BALITA ---
   async getBalita(): Promise<ApiResponse<IBalita[]>> {
     const { data } = await api.get("/posyandu/balita");
