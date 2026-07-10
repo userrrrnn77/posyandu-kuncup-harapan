@@ -112,6 +112,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               )}>
               <div className="flex items-center gap-3">
                 <menu.icon size={20} />
+                <span>{menu.name}</span>
               </div>
             </Link>
           ))}
