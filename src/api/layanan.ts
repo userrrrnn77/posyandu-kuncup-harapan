@@ -63,7 +63,7 @@ class PosyanduService {
     id: string,
     payload: Partial<IBalita>,
   ): Promise<ApiResponse<IBalita>> {
-    const { data } = await api.put(`/posyandu/balita/${id}`, payload);
+    const { data } = await api.patch(`/posyandu/balita/${id}`, payload);
     return data;
   }
 
@@ -89,7 +89,7 @@ class PosyanduService {
     id: string,
     payload: Partial<ILansia>,
   ): Promise<ApiResponse<ILansia>> {
-    const { data } = await api.put(`/posyandu/lansia/${id}`, payload);
+    const { data } = await api.patch(`/posyandu/lansia/${id}`, payload);
     return data;
   }
 
